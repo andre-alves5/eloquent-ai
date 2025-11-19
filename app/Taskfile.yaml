@@ -5,11 +5,6 @@ vars:
   IMAGE_TAG: foobarbaz
   SERVICE_RELEASE_TAG: services/go/api-golang
 
-includes:
-  utils:
-    taskfile: ../../../utils/Taskfile.yaml
-    dir: ../../../utils
-
 tasks:
   install:
     desc: "download dependencies"
