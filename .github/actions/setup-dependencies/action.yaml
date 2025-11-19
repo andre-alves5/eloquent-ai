@@ -42,13 +42,14 @@ runs:
         path: |
           ~/.cache/go-build
           ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/tests/go.sum','**/tests/go.mod') }}
+        key: ${{ runner.os }}-go-${{ hashFiles('infra/tests/go.mod', 'infra/tests/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
 
     - name: Get Go modules
       if: ${{ inputs.install_terraform == 'true' }}
       shell: bash
+      working-directory: infra/tests
       run: |
         echo "GOMODCACHE: $(go env GOMODCACHE)"
         go mod download
