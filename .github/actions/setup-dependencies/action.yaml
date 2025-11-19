@@ -55,11 +55,11 @@ runs:
 
     - name: Set up Python
       if: ${{ inputs.install_python == 'true' }}
-      uses: actions/setup-python@3d1e2d2ca0a067f27da6fec484fce7f5256def85 # v5.6.0
+      uses: actions/setup-python@v5
       with:
-        python-version-file: ./${{ inputs.service_path }}/requirements.txt
+        python-version: '3.12'
         cache: 'pip'
-        cache-dependency-path: ./${{ inputs.service_path }}/requirements.txt
+        cache-dependency-path: ./${{ inputs.service_path }}/requirements-tests.txt
 
     - name: Install dependencies
       shell: bash
