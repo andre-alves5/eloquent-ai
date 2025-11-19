@@ -34,8 +34,8 @@ jobs:
       - uses: ./.github/actions/setup-dependencies
         with:
           install_task: "true"
-          install_go: ${{ startsWith(matrix.service, 'infra/') }}
-          install_python: ${{ startsWith(matrix.service, 'app/') }}
+          install_terraform: ${{ startsWith(matrix.service, 'infra') }}
+          install_python: ${{ startsWith(matrix.service, 'app') }}
           service_path: ${{ matrix.service }}
       - name: Install / Build
         working-directory: ${{ matrix.service }}
