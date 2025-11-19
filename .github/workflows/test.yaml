@@ -37,10 +37,6 @@ jobs:
           install_terraform: ${{ startsWith(matrix.service, 'infra') }}
           install_python: ${{ startsWith(matrix.service, 'app') }}
           service_path: ${{ matrix.service }}
-      - name: Install / Build
-        working-directory: ${{ matrix.service }}
-        run: |
-          task install-ci
       - name: run tests
         working-directory: ${{ matrix.service }}
         run: |
