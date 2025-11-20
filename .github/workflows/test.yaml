@@ -41,6 +41,8 @@ jobs:
         working-directory: ${{ matrix.service }}
         run: |
           task test
+          env:
+            PYTHONPATH: ${{ github.workspace }}
 
   run-tests-failure-alert:
     runs-on: ubuntu-latest
