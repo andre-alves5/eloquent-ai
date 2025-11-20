@@ -1,13 +1,15 @@
 resource "aws_route_table" "private" {
+  for_each = aws_subnet.private
+
   vpc_id = aws_vpc.this.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.this.id
+    nat_gateway_id = aws_nat_gateway.this[each.key].id
   }
 
   tags = {
-    Name = "${var.env}-private"
+    Name = "${var.env}-private-${each.key}"
   }
 }
 
@@ -25,15 +27,15 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "private" {
-  count = length(var.private-subnets)
+  for_each = aws_subnet.private
 
-  subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private.id
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.private[each.key].id
 }
 
 resource "aws_route_table_association" "public" {
-  count = length(var.public-subnets)
+  for_each = aws_subnet.public
 
-  subnet_id      = aws_subnet.public[count.index].id
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }

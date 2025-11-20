@@ -4,11 +4,13 @@ output "vpc-id" {
 }
 
 output "private-subnet-ids" {
-  description = "Private subnet ids"
-  value       = aws_subnet.private[*].id
+  description = "List of IDs of private subnets"
+  # Iterate through the map and pull out the .id attribute
+  value = [for s in aws_subnet.private : s.id]
 }
 
 output "public-subnet-ids" {
-  description = "Public subnet ids"
-  value       = aws_subnet.public[*].id
+  description = "List of IDs of public subnets"
+  # Iterate through the map and pull out the .id attribute
+  value = [for s in aws_subnet.public : s.id]
 }

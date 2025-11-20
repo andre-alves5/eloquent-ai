@@ -6,14 +6,16 @@ variable "vpc-cidr-block" {
   type = string
 }
 
-variable "azs" {
-  type = list(string)
-}
-
 variable "private-subnets" {
-  type = list(string)
+  type = map(object({
+    cidr = string
+    az   = string
+  }))
 }
 
 variable "public-subnets" {
-  type = list(string)
+  type = map(object({
+    cidr = string
+    az   = string
+  }))
 }
