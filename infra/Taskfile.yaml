@@ -7,13 +7,6 @@ vars:
 
 tasks:
 
-  run:
-    desc: "download dependencies"
-    cmds:
-      - echo $PWD
-      - ls
-      - DATABASE_URL={{.DATABASE_URL}} go run main.go
-
   build-container-image-ko:
     desc: Build container image using ko
     cmds:

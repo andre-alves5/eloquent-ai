@@ -33,7 +33,7 @@ runs:
       if: ${{ inputs.install_terraform == 'true' }}
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.15.0
+        terraform_version: 1.5.0
 
     - name: Terraform Init
       if: ${{ inputs.install_terraform == 'true' }}
