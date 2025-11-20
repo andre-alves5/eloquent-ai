@@ -159,7 +159,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: taskdef.json
-          container-name: ${{ env.environment }}--eloquent-app-container
+          container-name: ${{ env.environment }}-eloquent-app-container
           image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
