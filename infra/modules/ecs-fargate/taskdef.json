@@ -1,7 +1,7 @@
 [
     {
-      "name": "app",
-      "image": "andrealves5/eloquent:REPLACE_TAG",
+      "name": "prd-task-definition",
+      "image": "789536878847.dkr.ecr.us-east-1.amazonaws.com/eloquent-ai-app:latest",
       "essential": true,
       "portMappings": [
         { "containerPort": 8080, "protocol": "tcp" }
