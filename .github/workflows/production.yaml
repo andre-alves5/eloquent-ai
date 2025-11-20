@@ -147,7 +147,7 @@ jobs:
 
       - name: Download Task Definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.environment }}-eloquent-api-svc \
+          aws ecs describe-task-definition --task-definition ${{ env.environment }}-task-definition \
           --query taskDefinition > taskdef.json
 
       - name: Fill in new image ID in the Amazon ECS task definition
