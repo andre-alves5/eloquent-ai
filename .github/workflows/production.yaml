@@ -143,6 +143,10 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Debug Output
+        run: |
+          echo "Received Image: ${{ needs.build-and-push.outputs.image }}"
+
       - name: Download Task Definition
         run: |
           aws ecs describe-task-definition --task-definition ${{ env.environment }}-task-definition \
