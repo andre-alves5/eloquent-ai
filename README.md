@@ -23,54 +23,50 @@ Database: Not currently required.
 
 Design Note: If a database were needed, it would be placed in a separate, isolated subnet tier with restricted Security Group rules allowing access only from the ECS Security Group.
 
-graph TD
-    subgraph "AWS Cloud"
-        subgraph VPC
-            subgraph "Public Subnet"
-                ALB[Application Load Balancer]
-                NAT[NAT Gateway]
-            end
-            subgraph "Private Subnet"
-                ECS_Fargate[ECS Fargate Service (App)]
-                AutoScaling[Auto Scaling (CPU > 70%)]
-            end
-        end
-        ECR[Amazon ECR]
-        S3_State[S3 Bucket (Terraform State)]
-        DynamoDB_Lock[DynamoDB (State Locking)]
+flowchart TD
+    %% Main Infrastructure Flow
+    CI_CD["GitHub Actions (CI/CD)"] -->|Terraform Apply| INFRA["AWS Infrastructure Managed via TF"]
+    INFRA --> VPC["Secure VPC"]
+
+    subgraph "Public Subnets (Tier 1)"
+        ALB["Application Load Balancer"]
+        NAT["NAT Gateways"]
     end
 
-    subgraph "GitHub Actions CI/CD"
-        CodePush[Code Push] --> Tests[Tests & TF Plan]
-        Tests --> DockerBuild[Docker Build & Push]
-        DockerBuild --> ECR
-        DockerBuild --> Deploy[Deploy to ECS (Update/Rollback)]
-        OIDC[OIDC Provider] -.-> |Auth| Deploy
+    subgraph "Private Subnets (Tier 2)"
+        ECS["ECS Fargate Cluster"]
+        TASKS["ECS Tasks (FastAPI App)"]
+        ASG["ECS Auto Scaling (CPU > 70%)"]
     end
 
-    Internet((Internet)) --> ALB
-    ALB --> ECS_Fargate
-    ECS_Fargate --> |Outbound Traffic| NAT
-    NAT --> Internet
-    AutoScaling -.-> |Scale Out/In| ECS_Fargate
+    %% Networking & App Flow
+    VPC --> Public_Subnets
+    Public_Subnets --> Private_Subnets
+    INTERNET((Internet)) -->|HTTPS Traffic| ALB
+    ALB -->|Routing| TASKS
+    ECS -->|Manages| TASKS
+    TASKS -->|Triggers| ASG
+    TASKS -.->|Outbound Traffic (e.g. Updates)| NAT
 
-    Deploy --> ECS_Fargate
-    Deploy --> |Read/Write State| S3_State
-    Deploy --> |Acquire/Release Lock| DynamoDB_Lock
+    %% Deployment & Controls Flow
+    subgraph Controls & Artifacts
+        OIDC["AWS OIDC Identity Provider"] -->|Auth Token| CI_CD
+        STATE["S3 (TF State) + DynamoDB (Locking)"] <-->|Read/Write| CI_CD
+        TESTS["Linting (Flake8) + Unit Tests (Pytest)"] -->|Gate| CI_CD
+        ECR["Amazon ECR Container Registry"]
+    end
 
-    style ALB fill:#ff9900,stroke:#232f3e,stroke-width:2px,color:white
-    style ECS_Fargate fill:#ff9900,stroke:#232f3e,stroke-width:2px,color:white
-    style ECR fill:#ff9900,stroke:#232f3e,stroke-width:2px,color:white
-    style NAT fill:#ff9900,stroke:#232f3e,stroke-width:2px,color:white
-    style S3_State fill:#3f8624,stroke:#232f3e,stroke-width:2px,color:white
-    style DynamoDB_Lock fill:#3f8624,stroke:#232f3e,stroke-width:2px,color:white
-    style AutoScaling fill:#ccffcc,stroke:#232f3e,stroke-width:1px,stroke-dasharray: 5 5
-    style VPC fill:#f2f2f2,stroke:#8c8c8c,stroke-width:2px,stroke-dasharray: 5 5
-    style "Public Subnet" fill:#e6ffe6,stroke:#8c8c8c,stroke-width:1px
-    style "Private Subnet" fill:#ffe6e6,stroke:#8c8c8c,stroke-width:1px
-    style Internet fill:#fff,stroke:#333,stroke-width:2px
-    style "GitHub Actions CI/CD" fill:#f0f0f0,stroke:#333,stroke-width:2px
-    style OIDC fill:#cccccc,stroke:#333,stroke-width:1px
+    %% Pipeline Actions
+    CI_CD -->|Docker Build & Push| ECR
+    ECR -.->|Pull Image| TASKS
+    CI_CD -->|Update Service / Rollback| ECS
+
+    %% Styling similar to example
+    style CI_CD fill:#f9f,stroke:#333,stroke-width:2px
+    style ECS fill:#E6F2FF,stroke:#333,stroke-width:2px
+    style ALB fill:#FFE6CC,stroke:#333,stroke-width:2px
+    style ECR fill:#D9EAD3,stroke:#333,stroke-width:2px
+    style Controls & Artifacts fill:#f4f4f4,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5
 
 2. Prerequisites
 Before running the pipeline or local terraform, ensure you have the following configured:
