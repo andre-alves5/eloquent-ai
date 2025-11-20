@@ -1,6 +1,6 @@
 [
     {
-      "name": "prd-task-definition",
+      "name": "prd-eloquent-app-container",
       "image": "789536878847.dkr.ecr.us-east-1.amazonaws.com/eloquent-ai-app:latest",
       "essential": true,
       "portMappings": [
