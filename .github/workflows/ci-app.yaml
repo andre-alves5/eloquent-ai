@@ -36,8 +36,12 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          cd app/tests/
-          PYTHONPATH=.. pytest -q || echo "No tests found, skipping..."
+          if [ -d "app/tests" ] && [ -n "$(find app/tests -name 'test_*.py')" ]; then
+            echo "Running tests..."
+            PYTHONPATH=app pytest app/tests/
+          else
+            echo "No tests found, skipping."
+          fi
 
   sonarcloud-scan:
     name: "SAST Scan with SonarCloud"

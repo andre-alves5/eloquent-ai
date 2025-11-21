@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import os
+from pathlib import Path
 
 app = FastAPI()
 
@@ -8,8 +9,9 @@ app = FastAPI()
 def get_app_version():
     """Reads the application version from the VERSION file."""
     try:
-        with open("VERSION", "r") as f:
-            return f.read().strip()
+        # Build a path relative to this file's location
+        version_file = Path(__file__).parent / "VERSION"
+        return version_file.read_text().strip()
     except FileNotFoundError:
         return "unknown"
 
