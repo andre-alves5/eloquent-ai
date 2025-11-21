@@ -6,7 +6,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
-  subnet_ids          = aws_subnet.private[*].id
+  subnet_ids          = [for subnet in aws_subnet.private : subnet.id]
   security_group_ids  = [aws_default_security_group.vpc_sg.id]
 
   tags = {
@@ -19,7 +19,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
-  subnet_ids          = aws_subnet.private[*].id
+  subnet_ids          = [for subnet in aws_subnet.private : subnet.id]
   security_group_ids  = [aws_default_security_group.vpc_sg.id]
 
   tags = {
@@ -45,7 +45,7 @@ resource "aws_vpc_endpoint" "logs" {
   service_name        = "com.amazonaws.${data.aws_region.current.name}.logs"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
-  subnet_ids          = aws_subnet.private[*].id
+  subnet_ids          = [for subnet in aws_subnet.private : subnet.id]
   security_group_ids  = [aws_default_security_group.vpc_sg.id]
 
   tags = {
