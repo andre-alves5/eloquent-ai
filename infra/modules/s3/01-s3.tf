@@ -8,6 +8,18 @@ resource "aws_s3_bucket" "this" {
   }
 }
 
+resource "aws_s3_bucket_acl" "this" {
+  bucket = aws_s3_bucket.this.id
+  acl    = "log-delivery-write"
+}
+
+resource "aws_s3_bucket_logging" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  target_bucket = aws_s3_bucket.this.id
+  target_prefix = "log/"
+}
+
 resource "aws_s3_bucket_policy" "this" {
   bucket = aws_s3_bucket.this.id
 
@@ -22,6 +34,9 @@ resource "aws_s3_bucket_policy" "this" {
       }
     ]
   })
-}
 
-data "aws_caller_identity" "current" {}
+  depends_on = [
+    aws_s3_bucket_acl.this,
+    aws_s3_bucket_logging.this,
+  ]
+}

@@ -1,12 +1,9 @@
-output "alb-dns" {
-  description = "ALB dns name"
-  value       = aws_lb.this.dns_name
+output "alb_sg_id" {
+  description = "The ID of the security group attached to the ALB."
+  value       = aws_security_group.alb_sg.id
 }
 
-output "alb-arn" {
-  value = aws_lb.this.arn
-}
-
-output "alb-sg-id" {
-  value = aws_security_group.alb_sg.id
+output "listener_arn" {
+  description = "The ARN of the HTTPS listener."
+  value       = aws_lb_listener.https.arn
 }

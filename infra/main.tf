@@ -63,6 +63,7 @@ module "ecs" {
   launch-type            = var.launch-type
   vpc-id                 = module.vpc.vpc-id
   private-subnet-ids     = module.vpc.private-subnet-ids
-  alb-sg-id              = module.alb.alb-sg-id
+  alb-sg-id              = module.alb.alb_sg_id
   use_fargate_spot       = var.use_fargate_spot
+  alb_listener_arn       = module.alb.listener_arn
 }
