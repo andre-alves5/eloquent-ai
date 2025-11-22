@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 module "test_acm" {
-  source = "../"
-
-  domain_name = "test.example.com"
+  source      = "../"
+  project     = "test"
+  domain_name = "example.com"
 }
