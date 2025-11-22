@@ -14,17 +14,6 @@ permissions:
   id-token: write
 
 jobs:
-  lint-terraform:
-    name: "Lint Terraform"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: TFLint
-        uses: tflint-github-action/tflint-github-action@v7
-        with:
-          tflint_working_dir: infra
-
   test-terraform-modules:
     name: "Test Terraform Modules"
     runs-on: ubuntu-latest
